@@ -19,8 +19,9 @@ def add_indicators(data):
     data["HMA"] = ta.WMA(2*a - b,timeperiod = int(15**(0.5)))
     data["ADX"] = ta.ADX(data["High"],data["Low"],data["Close"],timeperiod = 15)
     data.dropna(inplace = True)
+    
 
-data = pd.read_csv("Data/TSLA.csv")
+data = pd.read_csv("Data/TTM.csv")
 
 data.dropna(inplace = True) # Drop missing entries
 
@@ -31,9 +32,6 @@ data.rename(columns = {"Adj Close":"Close"}, inplace = True)
 
 add_indicators(data) # Add indicators to the dataframe
 
-
 data.drop(labels = ["Volume","Low","High"], axis = 1, inplace = True) # Drop Volume column
-
-data = (data - data.min())/(data.max() - data.min()) # Normalize columns
 
 data.to_csv("data.csv") # Save Data as CSV

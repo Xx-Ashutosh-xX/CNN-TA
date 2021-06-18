@@ -22,13 +22,13 @@ def add_indicators(data):
     data["ADX"] = ta.ADX(data["High"],data["Low"],data["Close"],timeperiod = 15)
     data.dropna(inplace = True)
 
-model_1 = load_model('MODEL/type_2/phase_1/')
-model_2 = load_model('MODEL/type_2/phase_2/')
-model_3 = load_model('MODEL/type_2/phase_3/')
+model_1 = load_model('MODEL/type_1/phase_1/')
+model_2 = load_model('MODEL/type_1/phase_2/')
+model_3 = load_model('MODEL/type_1/phase_3/')
 
-root = 'D:/Programing/Python/Image procesing in Finance/Data/TSLA/' # root data path
+root = 'D:/Programing/Python/Image procesing in Finance/Data/TTM/' # root data path
 
-data = pd.read_csv("Data/TSLA.csv")
+data = pd.read_csv("Data/TTM.csv")
 print("loaded CSV\n")
 
 data.dropna(inplace = True) # Drop missing entries
@@ -41,7 +41,7 @@ add_indicators(data) # Add indicators to the dataframe
 
 image_generator = ImageDataGenerator(rescale=1/255)
 
-testing_dataset = image_generator.flow_from_directory(directory='Data/TSLA',
+testing_dataset = image_generator.flow_from_directory(directory='Data/TTM',
                                                     target_size=(15,15),
                                                     batch_size = 32, 
                                                     color_mode='grayscale')
@@ -54,19 +54,7 @@ max_index_1 = np.argmax(result_1, axis=1)
 max_index_2 = np.argmax(result_2, axis=1)
 max_index_3 = np.argmax(result_3, axis=1)
 
-max_index_1 = np.where(max_index_1 == 0, 3, max_index_1)
-max_index_1 = np.where(max_index_1 == 1, 0, max_index_1)
-max_index_1 = np.where(max_index_1 == 3, 1, max_index_1)
-
-max_index_2 = np.where(max_index_2 == 0, 3, max_index_2)
-max_index_2 = np.where(max_index_2 == 1, 0, max_index_2)
-max_index_2 = np.where(max_index_2 == 3, 1, max_index_2)
-
-max_index_3 = np.where(max_index_3 == 0, 3, max_index_3)
-max_index_3 = np.where(max_index_3 == 1, 0, max_index_3)
-max_index_3 = np.where(max_index_3 == 3, 1, max_index_3)
-
-temp = [0,0,0,0,0,0,0,0,0,0,0,0,0,0] # padding 14 days
+temp = [1,1,1,1,1,1,1,1,1,1,1,1,1,1] # padding 14 days
 
 max_index_1 = np.insert(max_index_1,0,temp)
 max_index_2 = np.insert(max_index_2,0,temp)
@@ -78,5 +66,5 @@ data['model_1'] = max_index_1.tolist()
 data['model_2'] = max_index_2.tolist()
 data['model_3'] = max_index_3.tolist()
 
-# {'Hold': 0, 'Buy': 1, 'Sell': 2}
-data.to_csv("Data/TSLA/test.csv") # Save Data as CSV
+# { 'Buy': 0, 'Hold': 1, 'Sell': 2}
+data.to_csv("Data/TTM/test.csv") # Save Data as CSV
